@@ -3,22 +3,23 @@
 
 #include <sys/unistd.h>
 #include <iostream>
+#include "Exceptions.hpp"
 
 namespace Task1 {
 
     class Descriptor {
     private:
-        int _fd;
+        int fd_;
 
     public:
         Descriptor();
-        Descriptor(const int);
+        explicit Descriptor(int);
         ~Descriptor();
         Descriptor(const Descriptor &) = delete;
-        Descriptor &operator=(const int);
+        Descriptor &operator=(int);
+        operator bool() const;
         void close();
         int getFd() const;
-        bool isExists() const;
     };
 
 }

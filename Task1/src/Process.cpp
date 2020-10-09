@@ -12,17 +12,19 @@ namespace Task1 {
     }
 
     Process::Process(const std::string& path, std::vector<std::string> &argv) :
-            proc_path{path}, proc_pid{0}, proc_in{0}, proc_out{0} {
+            proc_path_{path}, proc_pid_{0} {
         int pipe_in[2], pipe_out[2];
         if (pipe(pipe_in) < 0 || pipe(pipe_out) < 0) {
-            std::cerr << "Error in creating pipe" << std::endl;
-            exit(1);
+            ::close(pipe_in[1]);
+            ::close(pipe_out[0]);
+            ::close(pipe_in[0]);
+            ::close(pipe_out[1]);
+            throw Task1::PipeError("Error in creating pipe");
         }
-        proc_pid = fork();
-        if (proc_pid < 0) {
-            std::cerr << "Error in making fork" << std::endl;
-            exit(1);
-        } else if (!proc_pid) {
+        proc_pid_ = fork();
+        if (proc_pid_ < 0) {
+            throw Task1::ProcessError("Error in making fork");
+        } else if (!proc_pid_) {
             ::close(pipe_in[1]);
             ::close(pipe_out[0]);
             if(dup2(pipe_in[0], 0) < 0 || dup2(pipe_out[1], 1) < 0) {
@@ -31,21 +33,22 @@ namespace Task1 {
             }
             ::close(pipe_in[0]);
             ::close(pipe_out[1]);
-            if (execvp(path.c_str(), parseArgs(proc_path, argv).data()) < 0) {
+            if (execvp(path.c_str(), parseArgs(proc_path_, argv).data()) < 0) {
                 std::cerr << "Error in making process" << std::endl;
                 exit(1);
             }
         } else {
             ::close(pipe_in[0]);
             ::close(pipe_out[1]);
-            proc_in = pipe_in[1];
-            proc_out = pipe_out[0];
+            proc_in_ = pipe_in[1];
+            proc_out_ = pipe_out[0];
         }
     }
 
-    Process::~Process() noexcept {
-        if (proc_pid) {
-            if (waitpid(proc_pid, nullptr, 0) < 0) {
+    Process::~Process() {
+        kill(proc_pid_, SIGKILL);
+        if (proc_pid_) {
+            if (waitpid(proc_pid_, nullptr, 0) < 0) {
                 std::cerr << "Error in child  process" << std::endl;
                 exit(1);
             }
@@ -53,14 +56,12 @@ namespace Task1 {
     }
 
     size_t Process::write(const void *data, size_t len) {
-        if (!proc_in.isExists()) {
-            std::cerr << "Write descriptor is closed" << std::endl;
-            exit(1);
+        if (!proc_in_) {
+            throw Task1::DescriptorError("Write descriptor is closed");
         }
-        ssize_t num_written = ::write(proc_in.getFd(), data, len);
+        ssize_t num_written = ::write(proc_in_.getFd(), data, len);
         if (num_written < 0) {
-            std::cerr << "Error writing into process" << std::endl;
-            exit(1);
+            throw Task1::WritingError("Error writing into process");
         } else {
             return static_cast<ssize_t> (num_written);
         }
@@ -75,14 +76,12 @@ namespace Task1 {
     }
 
     size_t Process::read(void *data, size_t len) {
-        if (!proc_out.isExists()) {
-            std::cerr << "Read descriptor is closed" << std::endl;
-            exit(1);
+        if (!proc_out_) {
+            throw Task1::DescriptorError("Read descriptor is closed");
         }
-        ssize_t num_read = ::read(proc_out.getFd(), data, len);
+        ssize_t num_read = ::read(proc_out_.getFd(), data, len);
         if (num_read < 0) {
-            std::cerr << "Error reading from process" << std::endl;
-            exit(1);
+            throw Task1::ReadingError("Error reading from process");
         } else {
             return static_cast<ssize_t> (num_read);
         }
@@ -94,22 +93,21 @@ namespace Task1 {
         while(num_read != len) {
             ssize_t recived = read(static_cast<char*>(data) + num_read, len - num_read);
             if (recived == 0) {
-                std::cerr << "EOF is reached before comlete reading" << std::endl;
-                exit(0);
+                throw Task1::ReadingError("EOF is reached before comlete reading");
             }
             num_read += recived;
         }
     }
 
     void Process::closeStdin() {
-        if (proc_in.isExists()) {
-            proc_in.close();
+        if (proc_in_) {
+            proc_in_.close();
         }
     }
 
     void Process::closeStdout() {
-        if (proc_in.isExists()) {
-            proc_in.close();
+        if (proc_out_) {
+            proc_out_.close();
         }
     }
 

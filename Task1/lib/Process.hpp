@@ -3,11 +3,13 @@
 
 #include <unistd.h>
 #include <sys/types.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include "Descriptor.hpp"
+#include "Exceptions.hpp"
 
 namespace Task1 {
 
@@ -15,14 +17,14 @@ namespace Task1 {
 
     class Process {
     private:
-        std::string proc_path;
-        pid_t proc_pid;
-        Descriptor proc_in;
-        Descriptor proc_out;
+        std::string proc_path_;
+        pid_t proc_pid_;
+        Descriptor proc_in_;
+        Descriptor proc_out_;
 
     public:
         Process(const std::string &, std::vector<std::string> &);
-        ~Process() noexcept;
+        ~Process();
         size_t write(const void *, size_t);
         void writeExact(const void *, size_t);
         size_t read(void *, size_t);
