@@ -7,14 +7,12 @@ Descriptor::Descriptor() : fd_{-1} {}
 Descriptor::Descriptor(const int fd) : fd_{fd} {}
 
 Descriptor::~Descriptor() {
-    if (*this) {
-        try {
-            close();
-        }
-        catch (Task1::DescriptorError &info) {
-            std::cerr << info.what() << std::endl;
-            exit(1);
-        }
+    try {
+        close();
+    }
+    catch (Task1::DescriptorError &info) {
+        std::cerr << info.what() << std::endl;
+        exit(1);
     }
 }
 
