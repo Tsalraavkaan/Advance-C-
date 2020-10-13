@@ -37,6 +37,7 @@ Process::Process(const std::string& path, const std::vector<std::string> &argv) 
         for (std::string& arg : copy) {
              char_argv.push_back(arg.data());
         }
+        char_argv.push_back(nullptr);
         if (execvp(path.c_str(), char_argv.data()) < 0) {
             std::cerr << "Error in making process" << std::endl;
             exit(1);
