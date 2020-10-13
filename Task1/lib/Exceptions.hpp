@@ -1,48 +1,39 @@
 #ifndef HW_EXCEPTIONS_H
 #define HW_EXCEPTIONS_H
 
-#include <exception>
-#include <string>
+#include <stdexcept>
 
 namespace Task1 {
+class BaseException : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
 
-    class BaseException : public std::exception  {
-    private:
-        std::string info_;
+class PipeError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
 
-    public:
-        BaseException(const std::string &);
-        const char *what() const noexcept override;
-    };
+class ProcessError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
 
-    class PipeError : public BaseException  {
-    public:
-        PipeError(const std::string &);
-    };
+class DescriptorError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
 
-    class ProcessError : public BaseException  {
-    public:
-        ProcessError(const std::string &);
-    };
+class ReadingError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
 
-    class DescriptorError : public BaseException 
-    {
-    public:
-        DescriptorError(const std::string &);
-    };
+class WritingError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
 
-    class ReadingError : public BaseException 
-    {
-    public:
-        ReadingError(const std::string &);
-    };
-
-    class WritingError : public BaseException 
-    {
-    public:
-        WritingError(const std::string &);
-    };
-
-}
+} // namespace Task1
 
 #endif

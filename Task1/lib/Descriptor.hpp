@@ -7,21 +7,21 @@
 
 namespace Task1 {
 
-    class Descriptor {
-    private:
-        int fd_;
+class Descriptor {
+private:
+    int fd_;
 
-    public:
-        Descriptor();
-        explicit Descriptor(int);
-        ~Descriptor();
-        Descriptor(const Descriptor &) = delete;
-        Descriptor &operator=(int);
-        operator bool() const;
-        void close();
-        int getFd() const;
-    };
+public:
+    Descriptor();
+    explicit Descriptor(int);
+    ~Descriptor();
+    Descriptor(const Descriptor &) = delete;
+    Descriptor &operator=(int);
+    operator bool() const;
+    void close();
+    int getFd() const;
+};
 
-}
+} // namespace Task1
 
 #endif

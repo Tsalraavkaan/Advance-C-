@@ -2,36 +2,47 @@
 
 namespace Task1 {
 
-    Descriptor::Descriptor() : fd_{-1} {}
+Descriptor::Descriptor() : fd_{-1} {}
 
-    Descriptor::Descriptor(const int fd) : fd_{fd} {}
+Descriptor::Descriptor(const int fd) : fd_{fd} {}
 
-    Descriptor::~Descriptor() {
-        if (this) {
+Descriptor::~Descriptor() {
+    if (*this) {
+        try {
             close();
         }
-    }
-
-    Descriptor &Descriptor::operator=(const int fd) {
-        fd_ = fd;
-        return *this;
-    }
-
-    void Descriptor::close() {
-        if (fd_ == -1) {
-            return;
+        catch (Task1::DescriptorError &info) {
+            std::cerr << info.what() << std::endl;
+            exit(1);
         }
-        if (::close(fd_) < 0) {
-            throw Task1::DescriptorError("Error in closing desciptor");
-        }
-        fd_ = -1;
-    }
-
-    int Descriptor::getFd() const {
-        return fd_;
-    }
-
-    Descriptor::operator bool() const {
-        return fd_ != -1;
     }
 }
+
+Descriptor &Descriptor::operator=(const int fd) {
+    if (*this) {
+        close();
+    }
+    fd_ = fd;
+    return *this;
+}
+
+void Descriptor::close() {
+    if (fd_ == -1) {
+        return;
+    }
+    if (::close(fd_) < 0) {
+        fd_ = -1;
+        throw Task1::DescriptorError("Error in closing desciptor");
+    }
+    fd_ = -1;
+}
+
+int Descriptor::getFd() const {
+    return fd_;
+}
+
+Descriptor::operator bool() const {
+    return fd_ != -1;
+}
+
+} // namespace Task1

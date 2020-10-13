@@ -1,4 +1,4 @@
-#include "../lib/Process.hpp"
+#include "Process.hpp"
 
 using msg_size = uint64_t;
 
