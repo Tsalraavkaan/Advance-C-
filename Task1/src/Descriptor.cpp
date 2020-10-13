@@ -17,15 +17,13 @@ Descriptor::~Descriptor() {
 }
 
 Descriptor &Descriptor::operator=(const int fd) {
-    if (*this) {
-        close();
-    }
+    close();
     fd_ = fd;
     return *this;
 }
 
 void Descriptor::close() {
-    if (fd_ == -1) {
+    if (!*this) {
         return;
     }
     if (::close(fd_) < 0) {
