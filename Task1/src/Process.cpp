@@ -51,13 +51,7 @@ Process::Process(const std::string& path, const std::vector<std::string> &argv) 
 }
 
 Process::~Process() {
-    try {
-        close();
-    }
-    catch (Task1::DescriptorError &info) {
-        std::cerr << info.what() << std::endl;
-        exit(1);
-    }
+    close();
 }
 
 size_t Process::write(const void *data, size_t len) {
@@ -113,10 +107,7 @@ void Process::closeStdin() {
 void Process::close() {
     kill(proc_pid_, SIGKILL);
     if (proc_pid_) {
-        if (waitpid(proc_pid_, nullptr, 0) < 0) {
-            std::cerr << "Error in child  process" << std::endl;
-            exit(1);
-        }
+        waitpid(proc_pid_, nullptr, 0);
     }
 }
 

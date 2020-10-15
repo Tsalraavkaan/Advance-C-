@@ -12,7 +12,6 @@ Descriptor::~Descriptor() {
     }
     catch (Task1::DescriptorError &info) {
         std::cerr << info.what() << std::endl;
-        exit(1);
     }
 }
 
