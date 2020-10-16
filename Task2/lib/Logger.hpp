@@ -7,6 +7,7 @@
 
 namespace Task2 {
 enum class Level {
+    BASELVL,
     DEBUG,
     INFO,
     WARN,
@@ -19,8 +20,7 @@ protected:
     virtual void log(const std::string &, const Level) = 0;
 
 public:
-    BaseLogger();
-    BaseLogger(const Level);
+    BaseLogger(const Level = Level::BASELVL);
     virtual ~BaseLogger() noexcept;
     void debug(const std::string &);
     void info(const std::string &);
@@ -37,8 +37,7 @@ private:
     void log(const std::string &, const Level) override;
     
 public:
-    FileLogger(const std::string &);
-    FileLogger(const std::string &, const Level);
+    FileLogger(const std::string &, const Level = Level::DEBUG);
     virtual void flush() override;
 };
 
@@ -47,8 +46,7 @@ private:
     void log(const std::string &, const Level) override;
     
 public:
-    StdoutLogger();
-    StdoutLogger(const Level);
+    StdoutLogger(const Level = Level::BASELVL);
     virtual void flush() override;
 };
 
@@ -57,8 +55,7 @@ private:
     void log(const std::string &, const Level) override;
     
 public:
-    StderrLogger();
-    StderrLogger(const Level);
+    StderrLogger(const Level = Level::DEBUG);
     virtual void flush() override;
 };
 }//namespace Task2
