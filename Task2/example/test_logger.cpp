@@ -14,11 +14,17 @@ int main(void) {
     Task2::warn("WARN: Stderr");
     Task2::error("ERROR: Stderr");
     
-    Task2::Logger::get_instance().set_global_logger(Task2::init_with_file_logger("log.txt", Task2::Level::DEBUG));
+    Task2::Logger::get_instance().set_global_logger(Task2::init_with_file_logger("log.txt"));
+    //Task2::FileLogger logger("log.txt");
+    std::cout << "!!" << std::endl;
     Task2::debug("DEBUG: File");
+    std::cout << "!!" << std::endl;
     Task2::info("INFO: File");
+    std::cout << "!!" << std::endl;
     Task2::warn("WARN: File");
+    std::cout << "!!" << std::endl;
     Task2::error("ERROR: File");
+    std::cout << "!!" << std::endl;
 
     return 0;
 }

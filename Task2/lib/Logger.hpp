@@ -15,49 +15,41 @@ enum class Level {
 };
 
 class BaseLogger {
-protected:
+private:
+    std::basic_ostream<char> *stream_;
+    void log(const std::string &, const Level);
     Level level_;
-    virtual void log(const std::string &, const Level) = 0;
 
 public:
-    BaseLogger(const Level = Level::BASELVL);
-    virtual ~BaseLogger() noexcept;
+    void flush();
+    BaseLogger(const Level = Level::BASELVL, std::basic_ostream<char> * = &std::cout);
+    virtual ~BaseLogger() = default;
     void debug(const std::string &);
     void info(const std::string &);
     void warn(const std::string &);
     void error(const std::string &);
     void set_level(const Level);
-    Level level(void) const;
-    virtual void flush() = 0;
 };
 
 class FileLogger : public BaseLogger {
 private:
     std::ofstream file_;
-    void log(const std::string &, const Level) override;
-    
+
 public:
-    FileLogger(const std::string &, const Level = Level::DEBUG);
-    virtual void flush() override;
+    FileLogger(const std::string &, const Level = Level::BASELVL);
+    ~FileLogger();
 };
 
 class StdoutLogger : public BaseLogger {
-private:
-    void log(const std::string &, const Level) override;
-    
 public:
     StdoutLogger(const Level = Level::BASELVL);
-    virtual void flush() override;
 };
 
 class StderrLogger : public BaseLogger {
-private:
-    void log(const std::string &, const Level) override;
-    
 public:
-    StderrLogger(const Level = Level::DEBUG);
-    virtual void flush() override;
+    StderrLogger(const Level = Level::BASELVL);
 };
+
 }//namespace Task2
 
 

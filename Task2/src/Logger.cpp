@@ -2,9 +2,17 @@
 
 namespace Task2 {
 
-BaseLogger::BaseLogger(const Level level) : level_{level} {}
+BaseLogger::BaseLogger(const Level level, std::basic_ostream<char> *stream) : level_{level}, stream_{stream} {}
 
-BaseLogger::~BaseLogger() {}
+void BaseLogger::log(const std::string &message, const Level lvl) {
+    if (level_ <= lvl) {
+        *stream_ << message << std::endl;
+    }
+}
+
+void BaseLogger::flush(void) {
+    stream_->flush();
+}
 
 void BaseLogger::debug(const std::string &message) {
     log(message, Level::DEBUG);
@@ -26,45 +34,15 @@ void BaseLogger::set_level(const Level level) {
     level_ = level;
 }
 
-Level BaseLogger::level(void) const {
-    return level_;
-}
-
 FileLogger::FileLogger(const std::string &path, const Level level) :
-        BaseLogger(level), file_(path, std::ios::app) {}
+        file_{std::ofstream(path, std::ios::app)}, BaseLogger(level, &file_) {}
 
-void FileLogger::log(const std::string &message, const Level lvl) {
-    if (level() <= lvl) {
-        file_ << message << std::endl;
-    }
+FileLogger::~FileLogger() {
+    flush();
 }
 
-void FileLogger::flush(void) {
-    file_.flush();
-}
+StdoutLogger::StdoutLogger(const Level level) : BaseLogger(level, &std::cout) {}
 
-StdoutLogger::StdoutLogger(const Level level) : BaseLogger(level) {}
-
-void StdoutLogger::flush(void) {
-    std::flush(std::cout);
-}
-
-void StdoutLogger::log(const std::string &message, const Level lvl) {
-    if (level() <= lvl) {
-        std::cout << message << std::endl;
-    }
-}
-
-StderrLogger::StderrLogger(const Level level) : BaseLogger(level) {}
-
-void StderrLogger::flush(void) {
-    std::flush(std::cout);
-}
-
-void StderrLogger::log(const std::string &message, const Level lvl) {
-    if (level() <= lvl) {
-        std::cerr << message << std::endl;
-    }
-}
+StderrLogger::StderrLogger(const Level level) : BaseLogger(level, &std::cerr) {}
 
 } //namespace Task2

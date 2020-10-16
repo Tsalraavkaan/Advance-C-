@@ -2,33 +2,31 @@
 
 namespace Task2 {
 
-Logger::Logger() : global_logger_(std::unique_ptr<StdoutLogger>(new StdoutLogger())) {}
+Logger::Logger(BaseLogger logger) : global_logger_{logger} {}
 
 Logger &Logger::get_instance() {
     static Logger log_instance;
     return log_instance;
 }
 
-BaseLogger &Logger::get_global_logger() {
-    return *global_logger_;
+BaseLogger Logger::get_global_logger() {
+    return global_logger_;
 }
 
-void Logger::set_global_logger(std::unique_ptr<BaseLogger> logger) {
-    if (logger != nullptr) {
-        global_logger_ = std::move(logger);
-    }
+void Logger::set_global_logger(BaseLogger logger) {
+    global_logger_ = std::move(logger);
 }
 
-std::unique_ptr<FileLogger> init_with_file_logger(const std::string &path, const Level level) {
-    return std::make_unique<FileLogger>(path, level);
+FileLogger init_with_file_logger(const std::string &path, const Level level) {
+    return FileLogger(path, level);
 }
 
-std::unique_ptr<StdoutLogger> init_with_stdout_logger(const Level level) {
-    return std::make_unique<StdoutLogger>(level);
+StdoutLogger init_with_stdout_logger(const Level level) {
+    return StdoutLogger(level);
 }
 
-std::unique_ptr<StderrLogger> init_with_stderr_logger(const Level level) {
-    return std::make_unique<StderrLogger>(level);
+StderrLogger init_with_stderr_logger(const Level level) {
+    return StderrLogger(level);
 }
 
 void debug(const std::string &message) {
