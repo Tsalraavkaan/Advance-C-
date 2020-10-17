@@ -35,9 +35,12 @@ void BaseLogger::set_level(const Level level) {
 }
 
 FileLogger::FileLogger(const std::string &path, const Level level) :
-        file_{std::ofstream(path, std::ios::app)}, BaseLogger(level, &file_) {}
+        file_{std::ofstream(path, std::ios::app)}, BaseLogger(level, &file_) {
+    error("Start of file logger work");
+}
 
 FileLogger::~FileLogger() {
+    error("End of file logger work\n");
     flush();
 }
 

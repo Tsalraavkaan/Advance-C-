@@ -16,9 +16,9 @@ enum class Level {
 
 class BaseLogger {
 private:
-    std::basic_ostream<char> *stream_;
     void log(const std::string &, const Level);
     Level level_;
+    std::basic_ostream<char> *stream_;
 
 public:
     void flush();
