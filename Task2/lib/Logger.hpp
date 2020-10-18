@@ -18,10 +18,10 @@ class BaseLogger {
 private:
     void log(const std::string &, const Level);
     Level level_;
-    std::basic_ostream<char> *stream_;
+    std::ostream *stream_;
 
 protected:
-    BaseLogger(const Level, std::basic_ostream<char> *);
+    BaseLogger(const Level, std::ostream *);
 
 public:
     void flush();
@@ -39,7 +39,7 @@ private:
 
 public:
     FileLogger(const std::string &, const Level = Level::BASELVL);
-    ~FileLogger();
+    ~FileLogger() override;
 };
 
 class StdoutLogger : public BaseLogger {

@@ -9,7 +9,7 @@ namespace Task2 {
 class Logger {
 private:
     std::shared_ptr<BaseLogger> global_logger_;
-    Logger(std::shared_ptr<BaseLogger> = std::make_shared<StdoutLogger>());
+    Logger();
     ~Logger() = default;
 public:
     static Logger &get_instance();

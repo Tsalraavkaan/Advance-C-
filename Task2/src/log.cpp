@@ -2,7 +2,7 @@
 
 namespace Task2 {
 
-Logger::Logger(std::shared_ptr<BaseLogger> logger) : global_logger_(std::move(logger)) {}
+Logger::Logger() : global_logger_(std::make_shared<StdoutLogger>()) {}
 
 Logger &Logger::get_instance() {
     static Logger log_instance;
