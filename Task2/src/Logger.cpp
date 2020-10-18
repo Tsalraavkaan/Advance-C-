@@ -2,7 +2,8 @@
 
 namespace Task2 {
 
-BaseLogger::BaseLogger(const Level level, std::basic_ostream<char> *stream) : level_{level}, stream_{stream} {}
+BaseLogger::BaseLogger(const Level level, std::basic_ostream<char> *stream)
+        : level_{level}, stream_{stream} {}
 
 void BaseLogger::log(const std::string &message, const Level lvl) {
     if (level_ <= lvl) {
@@ -35,12 +36,9 @@ void BaseLogger::set_level(const Level level) {
 }
 
 FileLogger::FileLogger(const std::string &path, const Level level) :
-        file_{std::ofstream(path, std::ios::app)}, BaseLogger(level, &file_) {
-    error("Start of file logger work");
-}
+        file_{std::ofstream(path, std::ios::app)}, BaseLogger(level, &file_) {}
 
 FileLogger::~FileLogger() {
-    error("End of file logger work\n");
     flush();
 }
 

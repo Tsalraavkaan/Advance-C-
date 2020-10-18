@@ -20,9 +20,11 @@ private:
     Level level_;
     std::basic_ostream<char> *stream_;
 
+protected:
+    BaseLogger(const Level, std::basic_ostream<char> *);
+
 public:
     void flush();
-    BaseLogger(const Level = Level::BASELVL, std::basic_ostream<char> * = &std::cout);
     virtual ~BaseLogger() = default;
     void debug(const std::string &);
     void info(const std::string &);

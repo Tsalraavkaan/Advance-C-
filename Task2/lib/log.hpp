@@ -8,13 +8,13 @@ namespace Task2 {
 
 class Logger {
 private:
-    std::unique_ptr<BaseLogger> global_logger_;
-    Logger(std::unique_ptr<BaseLogger> = std::make_unique<StdoutLogger>());
+    std::shared_ptr<BaseLogger> global_logger_;
+    Logger(std::shared_ptr<BaseLogger> = std::make_shared<StdoutLogger>());
     ~Logger() = default;
 public:
     static Logger &get_instance();
     BaseLogger &get_global_logger();
-    void set_global_logger(std::unique_ptr<BaseLogger>);
+    void set_global_logger(std::shared_ptr<BaseLogger>);
 };
 
 void init_with_file_logger(const std::string &path, const Level level = Level::BASELVL);
