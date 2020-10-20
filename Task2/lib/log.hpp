@@ -13,7 +13,7 @@ private:
     ~Logger() = default;
 public:
     static Logger &get_instance();
-    BaseLogger &get_global_logger();
+    std::shared_ptr<BaseLogger> get_global_logger();
     void set_global_logger(std::shared_ptr<BaseLogger>);
 };
 

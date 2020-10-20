@@ -9,14 +9,15 @@ Logger &Logger::get_instance() {
     return log_instance;
 }
 
-BaseLogger &Logger::get_global_logger() {
-    return *global_logger_;
+std::shared_ptr<BaseLogger> Logger::get_global_logger() {
+    return global_logger_;
 }
 
 void Logger::set_global_logger(std::shared_ptr<BaseLogger> logger) {
-    if (logger != nullptr) {
-        global_logger_ = std::move(logger);
+    if (!logger) {
+        throw std::runtime_error("set_global_logger get zero ptr\n");
     }
+    global_logger_ = logger;
 }
 
 void init_with_file_logger(const std::string &path, const Level level) {
@@ -32,19 +33,19 @@ void init_with_stderr_logger(const Level level) {
 }
 
 void debug(const std::string &message) {
-    Logger::get_instance().get_global_logger().debug(message);
+    Logger::get_instance().get_global_logger()->debug(message);
 }
 
 void info(const std::string &message) {
-    Logger::get_instance().get_global_logger().info(message);
+    Logger::get_instance().get_global_logger()->info(message);
 }
 
 void warn(const std::string &message) {
-    Logger::get_instance().get_global_logger().warn(message);
+    Logger::get_instance().get_global_logger()->warn(message);
 }
 
 void error(const std::string &message) {
-    Logger::get_instance().get_global_logger().error(message);
+    Logger::get_instance().get_global_logger()->error(message);
 }
 
 } //namespace Task2
