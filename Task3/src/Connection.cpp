@@ -1,6 +1,4 @@
 #include "Connection.hpp"
-#include <errno.h>
-#include <string.h>
 
 namespace Tasks {
 
@@ -25,7 +23,7 @@ void Connection::set_timeout(long microsec) {
     timeval timeout{.tv_sec = 0, .tv_usec = microsec};
     if (setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) < 0 || 
             setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
-        throw Tasks::TimeoutError(std::string("Error in timeout") + " " + strerror(errno));
+        throw Tasks::TimeoutError("Error in timeout");
     }
 
 }

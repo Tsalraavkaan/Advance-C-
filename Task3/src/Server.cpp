@@ -1,6 +1,4 @@
 #include "Server.hpp"
-#include <errno.h>
-#include <string.h>
 
 namespace Tasks {
 
@@ -31,20 +29,17 @@ void Server::set_timeout(long microsec) {
 
 void Server::open(const std::string &addr, uint16_t port, int max_connection) {
     sock_fd_.open();
-    sock_fd_.listen(max_connection);
 
     sockaddr_in sock_addr{};
     sock_addr.sin_family = AF_INET;
     sock_addr.sin_port = htons(port);
-    sock_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     if (::inet_aton(addr.c_str(), &sock_addr.sin_addr) == 0) {
         throw Tasks::BaseException("Invalid Ip address");
     }
     if (::bind(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
-        std::cout << addr << " " << port << std::endl;
-        std::cout << (errno == EINVAL) << " " << strerror(errno) << std::endl;
         throw Tasks::ConnectionError("Error binding to socket!");
     }
+    set_max_connection(max_connection);
 }
 
 Connection Server::accept() {

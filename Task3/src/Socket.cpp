@@ -2,9 +2,7 @@
 
 namespace Tasks {
 
-Socket::Socket() : Descriptor() {
-    open();
-}
+Socket::Socket() : Descriptor(-1) {}
 
 Socket::Socket(int fd) : Descriptor(fd) {}
 

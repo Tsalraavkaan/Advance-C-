@@ -3,7 +3,6 @@
 
 #include "Exceptions.hpp"
 #include "Socket.hpp"
-#include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 
@@ -16,11 +15,11 @@ private:
     Connection &operator=(const Connection &) = delete;
 public:
     Connection(int = -1);
-    Connection(const std::string &, uint16_t = 8888);
+    Connection(const std::string &, uint16_t);
     Connection(Connection &&);
     ~Connection() = default;
     Connection &operator=(Connection &&);
-    void connect(const std::string &, uint16_t = 8888);
+    void connect(const std::string &, uint16_t);
     void close();
     size_t write(const void *, size_t);
     void writeExact(const void *, size_t);
