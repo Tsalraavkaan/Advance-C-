@@ -3,6 +3,8 @@
 
 #include "Exceptions.hpp"
 #include "Socket.hpp"
+#include <sys/types.h>
+#include <arpa/inet.h>
 
 namespace Tasks {
 

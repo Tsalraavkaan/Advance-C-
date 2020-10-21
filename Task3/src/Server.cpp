@@ -24,7 +24,15 @@ void Server::set_timeout(size_t millisecond) {
 
 void Server::open(const std::string &addr, uint16_t port, int max_connection) {
     sock_fd_.open();
-    sock_fd_.bind(addr, port);
+    sockaddr_in sock_addr{};
+    sock_addr.sin_family = AF_INET;
+    sock_addr.sin_port = htons(port);
+    if (::inet_aton(addr.c_str(), &sock_addr.sin_addr) == 0) {
+        throw Tasks::BaseException("Invalid Ip address");
+    }
+    if (::bind(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
+        throw Tasks::ConnectionError("Error binding to socket!");
+    }
     set_max_connection(max_connection);
 }
 
@@ -43,7 +51,11 @@ void Server::close() {
 }
 
 void Server::set_max_connection(int max_connection) {
-    sock_fd_.listen(max_connection);
+    if (sock_fd_) {
+        if (::listen(sock_fd_.get_fd(), max_connection) < 0) {
+            throw Tasks::ConnectionError("Error in listening socket!");
+        }
+    }
 }
 
 }//namespace Tasks
