@@ -19,8 +19,10 @@ Connection &Connection::operator=(Connection &&connection) {
     return *this;
 }
 
-void Connection::set_timeout(long microsec) {
-    timeval timeout{.tv_sec = 0, .tv_usec = microsec};
+void Connection::set_timeout(size_t millisecond) {
+    time_t seconds = millisecond / 1000;
+    suseconds_t microsec = (millisecond % 1000) * 1000;
+    timeval timeout{.tv_sec = seconds, .tv_usec = microsec};
     if (setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) < 0 || 
             setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
         throw Tasks::TimeoutError("Error in timeout");

@@ -25,7 +25,7 @@ public:
     void writeExact(const void *, size_t);
     size_t read(void *, size_t);
     void readExact(void *, size_t);
-    void set_timeout(long);
+    void set_timeout(size_t);
 };
 
 } //namespace Tasks
