@@ -20,7 +20,7 @@ public:
     void open(const std::string &, uint16_t, int = SOMAXCONN);
     Connection accept();
     void close();
-    void set_timeout(long);
+    void set_timeout(size_t);
     void set_max_connection(int);
 };
 

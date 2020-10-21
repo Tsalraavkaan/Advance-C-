@@ -9,7 +9,7 @@ Connection::Connection(const std::string &addr, uint16_t port) : sock_fd_{-1} {
 }
 
 Connection::Connection(Connection &&connection) :
-        sock_fd_{std::move(connection.sock_fd_.get_fd())} {
+        sock_fd_{std::move(connection.sock_fd_)} {
     connection.sock_fd_.set_fd(-1);
 }
 
@@ -20,31 +20,11 @@ Connection &Connection::operator=(Connection &&connection) {
 }
 
 void Connection::set_timeout(size_t millisecond) {
-    time_t seconds = millisecond / 1000;
-    suseconds_t microsec = (millisecond % 1000) * 1000;
-    timeval timeout{.tv_sec = seconds, .tv_usec = microsec};
-    if (setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) < 0 || 
-            setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
-        throw Tasks::TimeoutError("Error in timeout");
-    }
-
+    sock_fd_.set_timeout(millisecond);
 }
 
 void Connection::connect(const std::string &addr, uint16_t port) {
-    if (sock_fd_) {
-        throw Tasks::DescriptorError("Socket is already opened");
-    }
-    sock_fd_.open();
-
-    sockaddr_in sock_addr{};
-    sock_addr.sin_family = AF_INET;
-    sock_addr.sin_port = htons(port);
-    if (::inet_aton(addr.c_str(), &sock_addr.sin_addr) == 0) {
-        throw Tasks::BaseException("Invalid Ip address");
-    }
-    if (::connect(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
-        throw ConnectionError("Error connecting to " + addr + " " + std::to_string(port));
-    }
+    sock_fd_.connect(addr, port);
 }
 
 void Connection::close() {

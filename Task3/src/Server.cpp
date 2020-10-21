@@ -8,37 +8,23 @@ Server::Server(const std::string &addr, uint16_t port, int max_connection) : soc
     open(addr, port, max_connection);
 }
 
-Server::Server(Server &&server) : sock_fd_{std::move(server.sock_fd_.get_fd())} {
+Server::Server(Server &&server) : sock_fd_{std::move(server.sock_fd_)} {
     server.sock_fd_.set_fd(-1);
 }
 
 Server &Server::operator=(Server &&server) {
-    sock_fd_.set_fd(server.sock_fd_.get_fd());
+    sock_fd_.set_fd(server.sock_fd_);
     server.sock_fd_.set_fd(-1);
     return *this;
 }
 
-void Server::set_timeout(long microsec) {
-    timeval timeout{.tv_sec = 0, .tv_usec = microsec};
-    if (setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout)) < 0 || 
-            setsockopt(sock_fd_.get_fd(), SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
-        throw Tasks::TimeoutError("Error in timeout");
-    }
-
+void Server::set_timeout(size_t millisecond) {
+    sock_fd_.set_timeout(millisecond);
 }
 
 void Server::open(const std::string &addr, uint16_t port, int max_connection) {
     sock_fd_.open();
-
-    sockaddr_in sock_addr{};
-    sock_addr.sin_family = AF_INET;
-    sock_addr.sin_port = htons(port);
-    if (::inet_aton(addr.c_str(), &sock_addr.sin_addr) == 0) {
-        throw Tasks::BaseException("Invalid Ip address");
-    }
-    if (::bind(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
-        throw Tasks::ConnectionError("Error binding to socket!");
-    }
+    sock_fd_.bind(addr, port);
     set_max_connection(max_connection);
 }
 
