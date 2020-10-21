@@ -14,7 +14,8 @@ private:
     Connection(const Connection &) = delete;
     Connection &operator=(const Connection &) = delete;
 public:
-    Connection(int = -1);
+    Connection() = default;
+    Connection(int);
     Connection(const std::string &, uint16_t);
     Connection(Connection &&);
     ~Connection() = default;

@@ -3,9 +3,9 @@
 
 int main() {
     Tasks::Connection connection;
-    connection.connect("127.100.100.100", 8888);
+    connection.connect("127.127.127.127", 8888);
     connection.set_timeout(100000);
-    std::cout << "Send information" << std::endl;
+    std::cout << "Connection is established" << std::endl;
     connection.close();
     return 0;
 }
