@@ -9,8 +9,7 @@ Socket::Socket(int fd) : sock_fd_(fd) {}
 Socket::Socket(Socket &&sock) : sock_fd_(std::move(sock.sock_fd_)) {}
 
 Socket &Socket::operator=(Socket &&sock) {
-    set_fd(sock.get_fd());
-    sock.set_fd(-1);
+    std::swap(*this, sock);
     return *this;
 }
 

@@ -6,13 +6,12 @@ Descriptor::Descriptor() : fd_{-1} {}
 
 Descriptor::Descriptor(int fd) : fd_{fd} {}
 
-Descriptor::Descriptor(Descriptor &&desk) : fd_{desk.fd_} {
-    desk.set_fd(-1);
+Descriptor::Descriptor(Descriptor &&desk) {
+   std::swap(*this, desk);
 }
 
 Descriptor &Descriptor::operator=(Descriptor &&desk) {
-    fd_ = desk.fd_;
-    desk.set_fd(-1);
+    std::swap(*this, desk);
     return *this;
 }
 
