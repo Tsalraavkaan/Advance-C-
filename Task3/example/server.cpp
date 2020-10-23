@@ -1,11 +1,18 @@
 #include <iostream>
 #include "tcp.hpp"
+#include <cstring>
 
 int main(int argc, char *argv[]) {
-    Tasks::Server server("127.127.127.127", 8888);
+    Tasks::Server server("127.127.127.127", 8081);
     std::cout << "accepting:" << std::endl;
     Tasks::Connection connection = server.accept();
-    std::cout << "Accepting comlete" << std::endl;
+    connection.set_timeout(1000);
+    std::string str;
+    size_t size;
+    connection.readExact(&size, sizeof(size));
+    str.resize(size);
+    connection.readExact(str.data(), size);
+    std::cout << str << std::endl;
     server.close();
     return 0;
 }
