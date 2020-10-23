@@ -9,16 +9,6 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-class PipeError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
-class ProcessError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
 class DescriptorError : public BaseException {
 public:
     using BaseException::BaseException;

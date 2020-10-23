@@ -2,19 +2,14 @@
 
 namespace Tasks {
 
-Server::Server() : sock_fd_{-1} {}
-
-Server::Server(const std::string &addr, uint16_t port, int max_connection) : sock_fd_{-1} {
+Server::Server(const std::string &addr, uint16_t port, int max_connection) : sock_fd_{} {
     open(addr, port, max_connection);
 }
 
-Server::Server(Server &&server) : sock_fd_{std::move(server.sock_fd_)} {
-    server.sock_fd_.set_fd(-1);
-}
+Server::Server(Server &&server) : sock_fd_{std::move(server.sock_fd_)} {}
 
 Server &Server::operator=(Server &&server) {
-    sock_fd_.set_fd(server.sock_fd_);
-    server.sock_fd_.set_fd(-1);
+    sock_fd_.set_fd(std::move(server.sock_fd_));
     return *this;
 }
 
@@ -39,7 +34,7 @@ void Server::open(const std::string &addr, uint16_t port, int max_connection) {
 Connection Server::accept() {
     sockaddr_in client_addr;
     socklen_t addr_size = sizeof(client_addr);
-    int client_fd = ::accept(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&client_addr), &addr_size);
+    int client_fd = ::accept(sock_fd_.get_fd(), nullptr, 0);
     if (client_fd < 0) {
         throw Tasks::ConnectionError("Error accepting connection!");
     }

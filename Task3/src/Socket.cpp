@@ -2,15 +2,16 @@
 
 namespace Tasks {
 
-Socket::Socket() : sock_fd_(-1) {}
+Socket::Socket() : sock_fd_{} {}
 
 Socket::Socket(int fd) : sock_fd_(fd) {}
 
 Socket::Socket(Socket &&sock) : sock_fd_(std::move(sock.sock_fd_)) {}
 
 Socket &Socket::operator=(Socket &&sock) {
-    sock_fd_.set_fd(-1);
-    sock.sock_fd_.set_fd(-1);
+    set_fd(sock.get_fd());
+    sock.set_fd(-1);
+    return *this;
 }
 
 Socket::operator bool() const {

@@ -4,18 +4,15 @@ namespace Tasks {
 
 Connection::Connection(int fd) : sock_fd_{fd} {}
 
-Connection::Connection(const std::string &addr, uint16_t port) : sock_fd_{-1} {
+Connection::Connection(const std::string &addr, uint16_t port) : sock_fd_{} {
     connect(addr, port);
 }
 
 Connection::Connection(Connection &&connection) :
-        sock_fd_{std::move(connection.sock_fd_)} {
-    connection.sock_fd_.set_fd(-1);
-}
+        sock_fd_{std::move(connection.sock_fd_)} {}
 
 Connection &Connection::operator=(Connection &&connection) {
     sock_fd_ = std::move(connection.sock_fd_);
-    connection.sock_fd_.set_fd(-1);
     return *this;
 }
 
@@ -79,7 +76,7 @@ size_t Connection::read(void *data, size_t len) {
 void Connection::readExact(void *data, size_t len) {
     size_t num_read = 0;
     while(num_read != len) {
-        ssize_t recived = read(static_cast<char*>(data) + num_read, len - num_read);
+        size_t recived = read(static_cast<char*>(data) + num_read, len - num_read);
         if (recived == 0) {
             throw Tasks::ReadingError("EOF is reached before comlete reading");
         }

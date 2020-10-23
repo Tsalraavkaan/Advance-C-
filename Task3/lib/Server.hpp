@@ -13,7 +13,7 @@ private:
     Server(const Server &) = delete;
     Server &operator=(const Server &) = delete;
 public:
-    Server();
+    Server() = default;
     Server(const std::string &, uint16_t, int = SOMAXCONN);
     Server(Server &&);
     Server &operator=(Server &&);

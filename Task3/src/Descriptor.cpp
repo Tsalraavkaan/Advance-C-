@@ -6,13 +6,14 @@ Descriptor::Descriptor() : fd_{-1} {}
 
 Descriptor::Descriptor(int fd) : fd_{fd} {}
 
-Descriptor::Descriptor(Descriptor &&disc) : fd_{disc.fd_} {
-    disc.set_fd(-1);
+Descriptor::Descriptor(Descriptor &&desk) : fd_{desk.fd_} {
+    desk.set_fd(-1);
 }
 
-Descriptor &Descriptor::operator=(Descriptor &&disc) {
-    fd_ = disc.fd_;
-    disc.set_fd(-1);
+Descriptor &Descriptor::operator=(Descriptor &&desk) {
+    fd_ = desk.fd_;
+    desk.set_fd(-1);
+    return *this;
 }
 
 Descriptor::~Descriptor() {
