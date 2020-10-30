@@ -21,7 +21,7 @@ void Socket::set_fd(int fd) {
     sock_fd_.set_fd(fd);
 }
 
-int Socket::get_fd() {
+int Socket::get_fd() const {
     return sock_fd_.get_fd();
 }
 

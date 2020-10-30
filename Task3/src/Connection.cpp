@@ -24,14 +24,15 @@ void Connection::connect(const std::string &addr, uint16_t port) {
     if (sock_fd_) {
         throw Tasks::DescriptorError("Socket is already opened");
     }
-    sock_fd_.open();
     sockaddr_in sock_addr{};
     sock_addr.sin_family = AF_INET;
     sock_addr.sin_port = htons(port);
     if (::inet_aton(addr.c_str(), &sock_addr.sin_addr) == 0) {
         throw Tasks::BaseException("Invalid Ip address");
     }
+    sock_fd_.open();
     if (::connect(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
+        sock_fd_.close();
         throw ConnectionError("Error connecting to " + addr + " " + std::to_string(port));
     }
 }
@@ -47,10 +48,8 @@ size_t Connection::write(const void *data, size_t len) {
     ssize_t num_written = ::write(sock_fd_.get_fd(), data, len);
     if (num_written < 0) {
         throw Tasks::WritingError("Error writing into process");
-    } else {
-        return static_cast<size_t> (num_written);
     }
-
+    return static_cast<size_t> (num_written);
 }
 
 void Connection::writeExact(const void *data, size_t len) {

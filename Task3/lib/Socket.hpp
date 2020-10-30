@@ -18,7 +18,7 @@ public:
     Socket(Socket &&);
     Socket &operator=(Socket &&);
     operator bool() const;
-    int get_fd();
+    int get_fd() const;
     void set_fd(int);
     void close();
     void open();

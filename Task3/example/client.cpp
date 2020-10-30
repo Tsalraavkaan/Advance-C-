@@ -8,7 +8,7 @@ int main() {
         str += temp + " ";
     }
     Tasks::Connection connection;
-    connection.connect("127.127.127.127", 8081);
+    connection.connect("127.127.127.127", 8088);
     connection.set_timeout(1000);
     size_t size = str.size();
     connection.writeExact(&size, sizeof(size));
