@@ -29,7 +29,12 @@ void Server::open(const std::string &addr, uint16_t port, int max_connection) {
         sock_fd_.close();
         throw Tasks::ConnectionError("Error binding to socket!");
     }
-    set_max_connection(max_connection);
+    try {
+        set_max_connection(max_connection);
+    } catch(...) {
+        sock_fd_.close();
+        throw Tasks::ConnectionError("Error in listening socket!");
+    }
 }
 
 Connection Server::accept() {
