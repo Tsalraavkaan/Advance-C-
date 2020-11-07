@@ -9,27 +9,12 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-class DescriptorError : public BaseException {
+class KeyError : public BaseException {
 public:
     using BaseException::BaseException;
 };
 
-class ReadingError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
-class WritingError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
-class TimeoutError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
-class ConnectionError : public BaseException {
+class MapError : public BaseException {
 public:
     using BaseException::BaseException;
 };

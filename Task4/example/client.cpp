@@ -5,23 +5,33 @@
 
 int main()
 {
-    Tasks::SharedMap<std::string, std::string> map(1, 1024);
-    map.insert("ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    Tasks::SharedMap<int, std::string> map(10, 1024);
+    std::string str = "A";
+    char word = 'A';
+    for (int i = 0; i < 10; ++i) {
+        ++word;
+        str += word;
+        map.insert(i, str);
+    }
     int pid = fork();
     if (pid < 0) {
-        return 1;
+        exit(1);
+    } else if (pid == 0) {
+        for (int i = 0; i < 10; ++i) {
+            std::cout << i << " " <<  map.get(i) << std::endl;
+        }
+        map.insert(10, "QWERTY");
+        map.update(3, "aaaaaaaa");
+        map.remove(5);
+        exit(0);
     }
-    else if (pid == 0) {
-        std::cout << "ABC" << " " <<  map.get("ABC") << std::endl;
-        map.insert("123", "1234567891011121314151617181920");
-        map.update("ABC", "ABBACDDCEFFEGHHGIJJIABBACDDCEFFEGHHGIJJI");
-    }
-    else {
-        wait(nullptr);
-        std::cout << "123" << " " << map.get("123") << std::endl;
-        std::cout << "ABC" << " " <<  map.get("ABC") << std::endl;
-        map.remove("123");
-        std::cout << "ABC" << " " <<  map.get("ABC") << std::endl;
+    wait(NULL);
+    for (int i = 0; i < 11; ++i) {
+        try {
+            std::cout << i << " " <<  map.get(i) << std::endl;
+        } catch (Tasks::KeyError err) {
+            std::cerr << "No element with key this key" << std::endl;
+        }
     }
     return 0;
 }

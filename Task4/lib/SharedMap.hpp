@@ -18,11 +18,10 @@ private:
     using AllocPair = std::pair<MapKey, MapValue>;
     using MapType = std::map<MapKey, MapValue, std::less<MapKey>, ShAlloc<AllocPair>>;
 
-    //map_unique_ptr mmap_;
     char *mmap_;
     MapType *map_;
     ShMemState *state_;
-    ShAlloc<char> *shstr_alloc_;
+    std::unique_ptr<ShAlloc<char>> shstr_alloc_;
     MapKey convertKey(const Key &key) {
         if constexpr (std::is_pod<Key>::value) {
             return key;
@@ -42,16 +41,12 @@ public:
     Semaphore *sem;
     SharedMap(size_t block_size, size_t blocks_count) {
         size_t map_size = block_size * blocks_count + sizeof(Semaphore) + sizeof(ShMemState);
-        void *temp_mmap = ::mmap(0, map_size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+        void *temp_mmap = ::mmap(0, map_size,
+                PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
         if (temp_mmap == MAP_FAILED) {
-            throw;//exception!!
+            throw MapError("Error in creating map");
         }
         mmap_ = static_cast<char *>(temp_mmap);
-        /*map_unique_ptr temp(static_cast<char *>(memory),
-                            [map_size](char *memory) {
-                                ::munmap(memory, map_size);
-                                //exceptions!!!
-                            });*/
         char *temp_ptr = mmap_;
         sem = new(mmap_) Semaphore();
         temp_ptr += sizeof(Semaphore);
@@ -66,7 +61,7 @@ public:
         ::memset(state_->used_blocks_table, FREE_BLOCK, state_->blocks_count);
 
         if (!std::is_pod<Key>::value || !std::is_pod<Value>::value) {
-            shstr_alloc_ = new ShAlloc<char>(state_);
+            shstr_alloc_ = std::make_unique<ShAlloc<char>>(state_);
         } else {
             shstr_alloc_ = nullptr;
         }
@@ -74,6 +69,12 @@ public:
         ShAlloc<AllocPair> alloc{state_};
         ShAlloc<MapType> map_alloc{state_};
         map_ = new(map_alloc.allocate(1)) MapType(alloc);
+    }
+
+    ~SharedMap() {
+        size_t map_size = state_->block_size * state_->blocks_count
+                + sizeof(Semaphore) + sizeof(ShMemState);
+        ::munmap(mmap_, map_size);
     }
 
     void insert(const Key &key, const Value &value) {
@@ -90,14 +91,14 @@ public:
         SemLock lock(*sem);
         auto elem = map_->find(convertKey(key));
         if (elem == map_->end()) {
-            throw;//No such elem
+            throw KeyError("No such element in Shared Map");
         }
         return elem->second;
     }
 
     void update(const Key &key, const Value &value) {
         SemLock lock(*sem);
-        map_->operator[](convertKey(key));
+        map_->operator[](convertKey(key)) = convertValue(value);
     }
 };
 
