@@ -5,7 +5,7 @@
 
 int main()
 {
-    Tasks::SharedMap<int, std::string> map(10, 1024);
+    Tasks::shmem::SharedMap<int, std::string> map(10, 1024);
     std::string str = "A";
     char word = 'A';
     for (int i = 0; i < 10; ++i) {

@@ -2,9 +2,11 @@
 
 namespace Tasks {
 
+namespace shmem {
+
 Semaphore::Semaphore(int pshared) {
     if (::sem_init(&sem_id_, pshared, 1) < 0) {
-        throw;//exception!!!!!! initialize
+        throw SemError("Error initializing semaphore");
     }
 }
 
@@ -14,7 +16,7 @@ Semaphore::~Semaphore() {
 
 void Semaphore::post() {
     if (::sem_post(&sem_id_) < 0) {
-        throw;//exception!!!!!! EOVERFLOW
+        throw SemError("Overflow in sem_post");
     }
 }
 
@@ -25,5 +27,7 @@ void Semaphore::wait() {
 void Semaphore::destroy() {
     ::sem_destroy(&sem_id_);
 }
+
+} // namespace shmem
 
 } //namespace Tasks
