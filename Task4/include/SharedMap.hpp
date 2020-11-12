@@ -63,9 +63,15 @@ public:
     }
 
     ~SharedMap() {
-        size_t map_size = state_->block_size * state_->blocks_count
-                + sizeof(Semaphore) + sizeof(ShMemState);
+        size_t map_size = sizeof(Semaphore) + sizeof(ShMemState) + state_->blocks_count +
+                sizeof(MapType) + state_->block_size * state_->blocks_count;
         ::munmap(mmap_, map_size);
+    }
+
+    void destroy_map() {
+        SemLock lock(*sem_);
+        map_->~map();
+        sem_->~Semaphore();
     }
 
     void insert(const Key &key, const Value &value) {

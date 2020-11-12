@@ -29,9 +29,10 @@ int main()
     for (int i = 0; i < 11; ++i) {
         try {
             std::cout << i << " " <<  map.get(i) << std::endl;
-        } catch (Tasks::KeyError err) {
+        } catch (Tasks::KeyError &err) {
             std::cerr << "No element with key this key" << std::endl;
         }
     }
+    map.destroy_map();
     return 0;
 }
