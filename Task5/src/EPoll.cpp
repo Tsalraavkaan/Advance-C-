@@ -17,7 +17,7 @@ EPoll::EPoll() : epfd{::epoll_create(1)} {
 
 void EPoll::mod(int fd, EVENT_FLAG flag) const {
     ::epoll_event event{};
-    event.events = static_cast<uint32_t>(flag);
+    event.events = static_cast<uint32_t>(flag) | EPOLLRDHUP;
     event.data.fd = fd;
     int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_MOD, fd, &event);
     throw_epollerr(res == -1, "Error in adding register");
@@ -25,7 +25,7 @@ void EPoll::mod(int fd, EVENT_FLAG flag) const {
 
 void EPoll::add(int fd, EVENT_FLAG flag) const {
     ::epoll_event event{};
-    event.events = static_cast<uint32_t>(flag);
+    event.events = static_cast<uint32_t>(flag) | EPOLLRDHUP;
     event.data.fd = fd;
     int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_ADD, fd, &event);
     throw_epollerr(res == -1, "Error in changing register");

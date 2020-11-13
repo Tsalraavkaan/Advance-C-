@@ -42,6 +42,7 @@ std::cout << server_.get_fd() << std::endl;
             if (epevent.data.fd == server_.get_fd()) {
 std::cout << "1" << std::endl;
                 connections_.emplace_back(this, server_.accept());
+std::cout << "1" << std::endl;
                 epoll_.add(connections_.back().get_Desc(), EVENT_FLAG::BASIC);
                 listener_->onNewConnection(&(connections_.back()));
             } else {

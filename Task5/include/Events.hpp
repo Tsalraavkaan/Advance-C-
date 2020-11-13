@@ -8,10 +8,10 @@ namespace Tasks {
 namespace net {
 
 enum class EVENT_FLAG {
-    BASIC = EPOLLRDHUP,
-    READ = EPOLLIN | EPOLLRDHUP,
-    WRITE = EPOLLOUT | EPOLLRDHUP,
-    RDW = EPOLLIN | EPOLLOUT | EPOLLRDHUP
+    BASIC = 0,
+    READ = EPOLLIN,
+    WRITE = EPOLLOUT,
+    RDW = EPOLLIN | EPOLLOUT
 };
 
 } //namespace net
