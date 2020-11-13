@@ -21,9 +21,9 @@ public:
     EPoll &operator=(EPoll &&) = default;
     EPoll(const EPoll &) = delete;
     EPoll &operator=(const EPoll &) = delete;
-    void mod(const tcp::Descriptor &, EVENT_FLAG) const;
-    void add(const tcp::Descriptor &, EVENT_FLAG) const;
-    void del(const tcp::Descriptor &) const;
+    void mod(int, EVENT_FLAG) const;
+    void add(int, EVENT_FLAG) const;
+    void del(int) const;
     std::vector<::epoll_event> wait(int = 1000, int = 1024);
 };
 

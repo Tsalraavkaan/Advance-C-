@@ -12,8 +12,7 @@ void Service::setListener(IServiceListener *listener) {
 
 void Service::open(const std::string &addr, uint16_t port) {
     server_.open(addr, port);
-    server_.set_timeout(100);
-    epoll_.add(tcp::Descriptor(std::move(server_.get_fd())), EVENT_FLAG::RDW);
+    epoll_.add(server_.get_fd(), EVENT_FLAG::RDW);
 }
 
 void Service::close() {
@@ -28,24 +27,26 @@ void Service::closeConnection(BufConnection *bufcon) {
 }
 
 void Service::subscribeTo(const tcp::Connection &con, EVENT_FLAG flag) {
-    epoll_.mod(tcp::Descriptor(con.get_fd()), flag);
+    epoll_.mod(con.get_fd(), flag);
 }
 
 void Service::unsubscribeFrom(const tcp::Connection &con, EVENT_FLAG flag) {
-    epoll_.mod(tcp::Descriptor(con.get_fd()), flag);
+    epoll_.mod(con.get_fd(), flag);
 }
 
 void Service::run() {
     while (true) {
-std::cout << "!" << std::endl;
+std::cout << server_.get_fd() << std::endl;
         std::vector<::epoll_event> event_vec = epoll_.wait();
         for (::epoll_event &epevent : event_vec) {
-std::cout << "-" << std::endl;
             if (epevent.data.fd == server_.get_fd()) {
+std::cout << "1" << std::endl;
                 connections_.emplace_back(this, server_.accept());
+std::cout << "1" << std::endl;
                 epoll_.add(connections_.back().get_Desc(), EVENT_FLAG::BASIC);
                 listener_->onNewConnection(&(connections_.back()));
             } else {
+std::cout << "2" << std::endl;
                 int fd = epevent.data.fd;
                 std::_List_iterator<BufConnection> iter_client = std::find_if(connections_.begin(),
                     connections_.end(), [fd](BufConnection& client)

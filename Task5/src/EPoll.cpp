@@ -15,24 +15,24 @@ EPoll::EPoll() : epfd{::epoll_create(1)} {
     throw_epollerr(!epfd, "Error in creating epoll");
 }
 
-void EPoll::mod(const tcp::Descriptor &desc, EVENT_FLAG flag) const {
+void EPoll::mod(int fd, EVENT_FLAG flag) const {
     ::epoll_event event{};
     event.events = static_cast<uint32_t>(flag);
-    event.data.fd = desc.get_fd();
-    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_MOD, desc.get_fd(), &event);
+    event.data.fd = fd;
+    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_MOD, fd, &event);
     throw_epollerr(res == -1, "Error in adding register");
 }
 
-void EPoll::add(const tcp::Descriptor &desc, EVENT_FLAG flag) const {
+void EPoll::add(int fd, EVENT_FLAG flag) const {
     ::epoll_event event{};
     event.events = static_cast<uint32_t>(flag);
-    event.data.fd = desc.get_fd();
-    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_ADD, desc.get_fd(), &event);
+    event.data.fd = fd;
+    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_ADD, fd, &event);
     throw_epollerr(res == -1, "Error in changing register");
 }
 
-void EPoll::del(const tcp::Descriptor &desc) const {
-    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_DEL, desc.get_fd(), nullptr);
+void EPoll::del(int fd) const {
+    int res = epoll_ctl(epfd.get_fd(), EPOLL_CTL_DEL, fd, nullptr);
     throw_epollerr(res == -1, "Error in removing register");
 }
 
