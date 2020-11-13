@@ -7,6 +7,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 class Server {
 private:
     Socket sock_fd_;
@@ -22,7 +24,10 @@ public:
     void close();
     void set_timeout(size_t);
     void set_max_connection(int);
+    int get_fd() const;
 };
+
+} // namespace tcp
 
 } //namespace Tasks
 

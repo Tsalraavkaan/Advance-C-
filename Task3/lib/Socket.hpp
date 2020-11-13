@@ -6,6 +6,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 class Socket {
 private:
     Descriptor sock_fd_;
@@ -24,6 +26,8 @@ public:
     void open();
     void set_timeout(size_t);
 };
+
+} // namespace tcp
 
 } // namespace Tasks
 

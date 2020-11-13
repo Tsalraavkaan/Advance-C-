@@ -1,9 +1,10 @@
-#ifndef HW_EXCEPTIONS_H
-#define HW_EXCEPTIONS_H
+#ifndef TASKS_EXCEPTIONS_H
+#define TASKS_EXCEPTIONS_H
 
 #include <stdexcept>
 
 namespace Tasks {
+
 class BaseException : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
@@ -30,6 +31,11 @@ public:
 };
 
 class ConnectionError : public BaseException {
+public:
+    using BaseException::BaseException;
+};
+
+class EPollError : public BaseException {
 public:
     using BaseException::BaseException;
 };

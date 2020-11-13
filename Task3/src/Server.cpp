@@ -2,6 +2,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 Server::Server(const std::string &addr, uint16_t port, int max_connection) : sock_fd_{} {
     open(addr, port, max_connection);
 }
@@ -31,9 +33,9 @@ void Server::open(const std::string &addr, uint16_t port, int max_connection) {
     }
     try {
         set_max_connection(max_connection);
-    } catch(...) {
+    } catch(Tasks::ConnectionError &err) {
         sock_fd_.close();
-        throw Tasks::ConnectionError("Error in listening socket!");
+        throw err;
     }
 }
 
@@ -47,6 +49,10 @@ Connection Server::accept() {
     return Connection(client_fd);
 }
 
+int Server::get_fd() const {
+    return sock_fd_.get_fd();
+}
+
 void Server::close() {
     sock_fd_.close();
 }
@@ -58,5 +64,7 @@ void Server::set_max_connection(int max_connection) {
         }
     }
 }
+
+} // namespace tcp
 
 }//namespace Tasks

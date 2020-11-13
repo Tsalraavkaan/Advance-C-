@@ -7,7 +7,7 @@ int main() {
     while(std::cin >> temp) {
         str += temp + " ";
     }
-    Tasks::Connection connection;
+    Tasks::tcp::Connection connection;
     connection.connect("127.127.127.127", 8088);
     connection.set_timeout(1000);
     size_t size = str.size();

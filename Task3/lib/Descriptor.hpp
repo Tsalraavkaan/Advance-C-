@@ -7,6 +7,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 class Descriptor {
 private:
     int fd_;
@@ -24,6 +26,8 @@ public:
     int get_fd() const;
     void set_fd(int);
 };
+
+} // namespace tcp
 
 } // namespace Tasks
 

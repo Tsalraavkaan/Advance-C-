@@ -2,6 +2,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 Socket::Socket() : sock_fd_{} {}
 
 Socket::Socket(int fd) : sock_fd_(fd) {}
@@ -49,5 +51,7 @@ void Socket::set_timeout(size_t millisecond) {
         throw Tasks::TimeoutError("Error in timeout");
     }
 }
+
+} // namespace tcp
 
 }//namespace Tasks

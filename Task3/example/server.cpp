@@ -3,9 +3,9 @@
 #include <cstring>
 
 int main(int argc, char *argv[]) {
-    Tasks::Server server("127.127.127.127", 8088);
+    Tasks::tcp::Server server("127.127.127.127", 8088);
     std::cout << "accepting:" << std::endl;
-    Tasks::Connection connection = server.accept();
+    Tasks::tcp::Connection connection = server.accept();
     connection.set_timeout(1000);
     std::string str;
     size_t size;

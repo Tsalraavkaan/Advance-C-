@@ -8,6 +8,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 class Connection {
 private:
     Socket sock_fd_;
@@ -27,7 +29,10 @@ public:
     size_t read(void *, size_t);
     void readExact(void *, size_t);
     void set_timeout(size_t);
+    int get_fd() const;
 };
+
+} // namespace tcp
 
 } //namespace Tasks
 

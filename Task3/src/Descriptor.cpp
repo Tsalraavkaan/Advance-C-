@@ -2,6 +2,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 Descriptor::Descriptor() : fd_{-1} {}
 
 Descriptor::Descriptor(int fd) : fd_{fd} {}
@@ -47,5 +49,7 @@ void Descriptor::set_fd(int fd) {
     close();
     fd_ = fd;
 }
+
+} // namespace tcp
 
 } // namespace Tasks

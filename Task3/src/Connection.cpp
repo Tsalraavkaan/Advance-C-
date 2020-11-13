@@ -2,6 +2,8 @@
 
 namespace Tasks {
 
+namespace tcp {
+
 Connection::Connection(int fd) : sock_fd_{fd} {}
 
 Connection::Connection(const std::string &addr, uint16_t port) : sock_fd_{} {
@@ -33,8 +35,12 @@ void Connection::connect(const std::string &addr, uint16_t port) {
     sock_fd_.open();
     if (::connect(sock_fd_.get_fd(), reinterpret_cast<sockaddr*>(&sock_addr), sizeof(sock_addr)) < 0) {
         sock_fd_.close();
-        throw ConnectionError("Error connecting to " + addr + " " + std::to_string(port));
+        throw Tasks::ConnectionError("Error connecting to " + addr + " " + std::to_string(port));
     }
+}
+
+int Connection::get_fd() const {
+    return sock_fd_.get_fd();
 }
 
 void Connection::close() {
@@ -82,5 +88,7 @@ void Connection::readExact(void *data, size_t len) {
         num_read += recived;
     }
 }
+
+} // namespace tcp
 
 } //namespace Tasks
