@@ -41,7 +41,7 @@ size_t BufConnection::get_from_write() {
 
 void BufConnection::read(void *data, size_t len) {
     char *char_data = static_cast<char *>(data);
-    std::copy(write_buf_.data(), write_buf_.data() + len, char_data);
+    std::copy(read_buf_.data(), read_buf_.data() + len, char_data);
 }
 
 void BufConnection::write(const void *data, size_t len) {
