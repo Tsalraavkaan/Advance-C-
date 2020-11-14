@@ -32,7 +32,7 @@ public:
     void open(const std::string &, uint16_t);
     void close();
     void run();
-    void closeConnection(BufConnection *);
+    void closeConnection(const tcp::Connection &);
     void subscribeTo(const tcp::Connection &, EVENT_FLAG );
     void unsubscribeFrom(const tcp::Connection &, EVENT_FLAG );
 };

@@ -1,6 +1,6 @@
 #include "net.hpp"
 
-bool is_prime(long long a){
+int is_prime(long long a){
     if(a == 2)
         return true;
     if(a < 2 || a % 2 == 0)
@@ -14,11 +14,11 @@ bool is_prime(long long a){
 
 class PrimeService : public Tasks::net::IServiceListener {
 private:
-    bool result;
+    int result;
 public:
     void onNewConnection(Tasks::net::BufConnection *buf_con) override {
         std::cout << "New client connecting to Service" << std::endl;
-        buf_con->subscribe(Tasks::net::EVENT_FLAG::RDW);
+        buf_con->subscribe(Tasks::net::EVENT_FLAG::READ);
     }
 
     void onClose(Tasks::net::BufConnection *buf_con) override {
@@ -37,9 +37,13 @@ public:
     void onReadAvailable(Tasks::net::BufConnection *buf_con) override {
         long long num;
         buf_con->read(&num, sizeof(num));
-        result = is_prime(num);
-        buf_con->write(&result, sizeof(result));
         buf_con->unsubscribe(Tasks::net::EVENT_FLAG::READ);
+        std::cout << "Get number " << num << std::endl;
+        result = is_prime(num);
+        std::cout << "Result is " << result << std::endl;
+        sleep(1);
+        buf_con->write(&result, sizeof(result));
+        buf_con->subscribe(Tasks::net::EVENT_FLAG::WRITE);
     }
 
     void onError(Tasks::net::BufConnection *buf_con) override {
@@ -51,6 +55,6 @@ public:
 int main() {
     PrimeService prime_serv;
     Tasks::net::Service service(&prime_serv);
-    service.open("127.0.0.1", 8884);
+    service.open("127.0.0.1", 8083);
     service.run();
 }
