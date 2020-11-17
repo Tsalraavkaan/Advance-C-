@@ -1,7 +1,6 @@
 #ifndef TASKS_CONNECTION_H
 #define TASKS_CONNECTION_H
 
-#include "Exceptions.hpp"
 #include "Socket.hpp"
 #include <sys/types.h>
 #include <arpa/inet.h>

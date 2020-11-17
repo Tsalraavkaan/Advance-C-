@@ -1,7 +1,6 @@
 #ifndef TASKS_Server_H
 #define TASKS_Server_H
 
-#include "Exceptions.hpp"
 #include "Connection.hpp"
 #include "Socket.hpp"
 

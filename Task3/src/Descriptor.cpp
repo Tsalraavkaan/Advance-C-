@@ -1,4 +1,5 @@
 #include "Descriptor.hpp"
+#include "Exceptions.hpp"
 
 namespace Tasks {
 
@@ -9,11 +10,13 @@ Descriptor::Descriptor() : fd_{-1} {}
 Descriptor::Descriptor(int fd) : fd_{fd} {}
 
 Descriptor::Descriptor(Descriptor &&desk) {
-   std::swap(*this, desk);
+    fd_ = desk.fd_;
+    desk.fd_ = -1;
 }
 
 Descriptor &Descriptor::operator=(Descriptor &&desk) {
-    std::swap(*this, desk);
+    fd_ = desk.fd_;
+    desk.fd_ = -1;
     return *this;
 }
 

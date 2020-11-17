@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Exceptions.hpp"
 
 namespace Tasks {
 

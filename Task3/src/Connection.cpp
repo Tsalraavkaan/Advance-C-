@@ -1,4 +1,5 @@
 #include "Connection.hpp"
+#include "Exceptions.hpp"
 
 namespace Tasks {
 

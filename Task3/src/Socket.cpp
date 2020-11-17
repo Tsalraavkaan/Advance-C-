@@ -1,4 +1,5 @@
 #include "Socket.hpp"
+#include "Exceptions.hpp"
 
 namespace Tasks {
 
@@ -11,7 +12,8 @@ Socket::Socket(int fd) : sock_fd_(fd) {}
 Socket::Socket(Socket &&sock) : sock_fd_(std::move(sock.sock_fd_)) {}
 
 Socket &Socket::operator=(Socket &&sock) {
-    std::swap(*this, sock);
+    sock_fd_ = std::move(sock.sock_fd_);
+    sock.sock_fd_ = Descriptor(-1);
     return *this;
 }
 
