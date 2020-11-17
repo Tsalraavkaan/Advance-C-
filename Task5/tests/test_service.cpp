@@ -31,7 +31,6 @@ public:
         } else {
             std::cout << "Client's num is not prime" << std::endl;
         }
-        buf_con->unsubscribe(Tasks::net::EVENT_FLAG::WRITE);
     }
 
     void onReadAvailable(Tasks::net::BufConnection *buf_con) override {

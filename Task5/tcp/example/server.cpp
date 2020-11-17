@@ -13,6 +13,8 @@ int main(int argc, char *argv[]) {
     str.resize(size);
     connection.readExact(str.data(), size);
     std::cout << str << std::endl;
+    size = 1000;
+    connection.writeExact(&size, sizeof(size));
     server.close();
     return 0;
 }

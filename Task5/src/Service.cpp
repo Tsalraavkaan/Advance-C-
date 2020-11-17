@@ -12,7 +12,7 @@ void Service::setListener(IServiceListener *listener) {
 
 void Service::open(const std::string &addr, uint16_t port) {
     server_.open(addr, port);
-    epoll_.add(server_.get_fd(), EVENT_FLAG::RDW);
+    epoll_.add(server_.get_fd(), EVENT_FLAG::READ);
 }
 
 void Service::close() {

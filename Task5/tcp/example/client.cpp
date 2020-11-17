@@ -13,6 +13,9 @@ int main() {
     size_t size = str.size();
     connection.writeExact(&size, sizeof(size));
     connection.writeExact(str.data(), str.size());
+    sleep(1);
+    connection.readExact(&size, sizeof(size));
+    std::cout << size << std::endl;
     connection.close();
     return 0;
 }

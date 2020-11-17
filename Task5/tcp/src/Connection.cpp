@@ -1,5 +1,7 @@
 #include "Connection.hpp"
 #include "Exceptions.hpp"
+#include <cstring>
+#include <string>
 
 namespace Tasks {
 
@@ -72,7 +74,8 @@ size_t Connection::read(void *data, size_t len) {
     }
     ssize_t num_read = ::read(sock_fd_.get_fd(), data, len);
     if (num_read < 0) {
-        throw Tasks::ReadingError("Error reading from process");
+        std::string str = "Error reading from process errno: ";
+        throw Tasks::ReadingError(str + std::strerror(errno));
     } else {
         return static_cast<size_t> (num_read);
     }
