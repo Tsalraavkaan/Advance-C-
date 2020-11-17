@@ -1,5 +1,6 @@
 #include "EPoll.hpp"
 #include "Exceptions.hpp"
+#include <cstring>
 
 namespace Tasks {
 

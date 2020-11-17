@@ -56,14 +56,11 @@ void Service::run() {
                         listener_->onError(&*iter_client);
                     }
                 } else if (epevent.events & EPOLLOUT) {
-                    if (iter_client->get_write_buf().empty()) {
+                    if (iter_client->write_done()) {
                         listener_->onWriteDone(&*iter_client);
                     } else {
-                        if (!iter_client->get_from_writebuf()) {
-                            listener_->onError(&*iter_client);
-                        }
+                        iter_client->get_from_writebuf();
                     }
-                    
                 }
             }
         }

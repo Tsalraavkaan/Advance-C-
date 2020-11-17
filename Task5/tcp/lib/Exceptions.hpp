@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 namespace Tasks {
+
 class BaseException : public std::runtime_error {
 public:
     using std::runtime_error::runtime_error;
@@ -35,11 +36,6 @@ public:
 };
 
 class EPollError : public BaseException {
-public:
-    using BaseException::BaseException;
-};
-
-class BufError : public BaseException {
 public:
     using BaseException::BaseException;
 };

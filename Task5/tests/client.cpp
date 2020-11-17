@@ -14,6 +14,7 @@ int main() {
     int result;
     while(1) {
         connection.write(&number, sizeof(number));
+        sleep(1);
         connection.read(&result, sizeof(result));
     }
     std::cout << result << std::endl;

@@ -2,15 +2,14 @@
 #define TASKS_SERVICE_H
 
 #include "tcp.hpp"
+#include <algorithm>
+#include <list>
+
 
 #include "IServiceListener.hpp"
 #include "BufConnection.hpp"
 #include "EPoll.hpp"
 #include "Events.hpp"
-
-#include <algorithm>
-#include <list>
-#include <cstring>
 
 namespace Tasks {
 

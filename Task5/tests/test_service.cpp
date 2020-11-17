@@ -18,7 +18,7 @@ private:
 public:
     void onNewConnection(Tasks::net::BufConnection *buf_con) override {
         std::cout << "New client connecting to Service" << std::endl;
-        buf_con->subscribe(Tasks::net::EVENT_FLAG::READ);
+        buf_con->subscribe(Tasks::net::EVENT_FLAG::RDW);
     }
 
     void onClose(Tasks::net::BufConnection *buf_con) override {
@@ -41,9 +41,7 @@ public:
         std::cout << "Get number " << num << std::endl;
         result = is_prime(num);
         std::cout << "Result is " << result << std::endl;
-        sleep(1);
         buf_con->write(&result, sizeof(result));
-        buf_con->subscribe(Tasks::net::EVENT_FLAG::WRITE);
     }
 
     void onError(Tasks::net::BufConnection *buf_con) override {
