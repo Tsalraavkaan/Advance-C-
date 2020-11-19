@@ -5,18 +5,15 @@
 int main() {
 
     Tasks::tcp::Connection connection;
-    connection.connect("127.0.0.1", 8083);
-    connection.set_timeout(100);
+    connection.connect("127.0.0.1", 8088);
 
-    long long number;
+    int number;
     std::cout << "Input number:" << std::endl;
     std::cin >> number;
-    int result;
-    while(1) {
-        connection.write(&number, sizeof(number));
-        sleep(1);
-        connection.read(&result, sizeof(result));
-    }
+    std::string num = std::to_string(number);
+    connection.write(num.data(), sizeof(int));
+    std::string result(1024, '\0');
+    connection.read(result.data(), result.size());
     std::cout << result << std::endl;
     return 0;
 }

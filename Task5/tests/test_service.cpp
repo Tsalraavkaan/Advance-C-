@@ -1,4 +1,5 @@
 #include "net.hpp"
+#include <sstream>
 
 int is_prime(long long a){
     if(a == 2)
@@ -18,7 +19,7 @@ private:
 public:
     void onNewConnection(Tasks::net::BufConnection *buf_con) override {
         std::cout << "New client connecting to Service" << std::endl;
-        buf_con->subscribe(Tasks::net::EVENT_FLAG::RDW);
+        buf_con->subscribe(Tasks::net::EVENT_FLAG::READ);
     }
 
     void onClose(Tasks::net::BufConnection *buf_con) override {
@@ -31,16 +32,22 @@ public:
         } else {
             std::cout << "Client's num is not prime" << std::endl;
         }
+        buf_con->unsubscribe(Tasks::net::EVENT_FLAG::WRITE);
     }
 
     void onReadAvailable(Tasks::net::BufConnection *buf_con) override {
-        long long num;
-        buf_con->read(&num, sizeof(num));
-        buf_con->unsubscribe(Tasks::net::EVENT_FLAG::READ);
-        std::cout << "Get number " << num << std::endl;
-        result = is_prime(num);
-        std::cout << "Result is " << result << std::endl;
-        buf_con->write(&result, sizeof(result));
+        int num;
+        std::string &read_buf = buf_con->get_read_buf();
+        if (read_buf.size() >= sizeof(num)) {
+            num = std::stoi(read_buf);
+            buf_con->unsubscribe(Tasks::net::EVENT_FLAG::READ);
+            std::cout << "Get number " << num << std::endl;
+            result = is_prime(num);
+            std::cout << "Result is " << result << std::endl;
+            std::string &write_buf = buf_con->get_write_buf();
+            write_buf += std::string("Your number is not prime!");
+            buf_con->subscribe(Tasks::net::EVENT_FLAG::WRITE);
+        }
     }
 
     void onError(Tasks::net::BufConnection *buf_con) override {
@@ -52,6 +59,6 @@ public:
 int main() {
     PrimeService prime_serv;
     Tasks::net::Service service(&prime_serv);
-    service.open("127.0.0.1", 8083);
+    service.open("127.0.0.1", 8088);
     service.run();
 }
