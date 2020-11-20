@@ -16,6 +16,7 @@ void Service::open(const std::string &addr, uint16_t port) {
 }
 
 void Service::close() {
+    epoll_.del(server_.get_fd());
     server_.close();
 }
 
