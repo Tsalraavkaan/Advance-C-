@@ -37,7 +37,7 @@ void EPoll::del(int fd) const {
     throw_epollerr(res == -1, "Error in removing register");
 }
 
-std::vector<::epoll_event> EPoll::wait(int millisec, int maxevents) {
+std::vector<::epoll_event> EPoll::wait(int millisec, size_t maxevents) const {
     std::vector<::epoll_event> event_vec(maxevents);
     int cnt_events = ::epoll_wait(epfd.get_fd(), event_vec.data(), event_vec.size(), millisec);
     throw_epollerr(cnt_events == -1, "Error in waiting for events");

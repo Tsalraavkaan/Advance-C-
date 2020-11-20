@@ -15,8 +15,7 @@ namespace net {
 class Service;
 
 namespace BUF_CONSTS {
-    const unsigned long long READ_BUF_SIZE = 1024;
-    const unsigned long long WRITE_BUF_SIZE = 1024;
+    const int BUF_SIZE = 1024;
 };
 
 class BufConnection {
@@ -31,14 +30,18 @@ public:
     void subscribe(EVENT_FLAG);
     void unsubscribe(EVENT_FLAG);
     BufConnection(Service *, tcp::Connection &&);
+    ~BufConnection();
+    BufConnection &operator=(BufConnection &&) = delete;
+    BufConnection(BufConnection &&) = delete;
     BufConnection &operator=(const BufConnection &) = delete;
     BufConnection(const BufConnection &) = delete;
+    size_t read_to_buf();
+    size_t write_from_buf();
     int get_fd() const;
     void close();
     std::string &get_read_buf();
     std::string &get_write_buf();
     tcp::Connection &get_connection();
-    EVENT_FLAG &get_flag();
 };
 
 } //namespace net

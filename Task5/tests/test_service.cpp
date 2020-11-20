@@ -1,14 +1,17 @@
 #include "net.hpp"
 #include <sstream>
 
-int is_prime(long long a){
-    if(a == 2)
+int is_prime(long long a) {
+    if(a == 2) {
         return true;
-    if(a < 2 || a % 2 == 0)
+    }
+    if(a < 2 || a % 2 == 0) {
         return false;
-    for(long long i = 3; i * i <= a; i += 2){
-        if(a % i == 0)
+    }
+    for(long long i = 3; i * i <= a; i += 2) {
+        if(a % i == 0) {
             return false;
+        }
     }
     return true;
 }
@@ -45,7 +48,11 @@ public:
             result = is_prime(num);
             std::cout << "Result is " << result << std::endl;
             std::string &write_buf = buf_con->get_write_buf();
-            write_buf += std::string("Your number is not prime!");
+            if (result) {
+                write_buf += std::string("Your number is prime!");
+            } else {
+                write_buf += std::string("Your number is not prime!");
+            }
             buf_con->subscribe(Tasks::net::EVENT_FLAG::WRITE);
         }
     }
