@@ -1,6 +1,0 @@
-project(tcp)
-cmake_minimum_required(VERSION 3.10.2)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_library(tcp STATIC src/Descriptor.cpp src/Socket.cpp src/Connection.cpp src/Server.cpp)
-target_include_directories(tcp PUBLIC lib)
